@@ -35,9 +35,9 @@ create table `Fakultet_VP_2025`.`KORISNIK`
 
 
 
-INSERT INTO `Fakultet_VP_2025`.`KORISNIK` (PREZIME, IME, EMAIL, KORISNICKOIME, SIFRA, URLSLIKE, STATUSUCESCA) VALUES ('Кази','Љубица', 'ljubicakazi@hotmail.com', 'lkazi', 'lk', 'Ljubica.jpg', 'admin');
+INSERT INTO `Fakultet_VP_2025`.`KORISNIK` (PREZIME, IME, EMAIL, KORISNICKOIME, SIFRA, URLSLIKE, STATUSUCESCA) VALUES ('Kazi','Ljubica', 'ljubicakazi@hotmail.com', 'lkazi', 'lk', 'Ljubica.jpg', 'admin');
 
-INSERT INTO `Fakultet_VP_2025`.`SMER` (Oznaka, Naziv, UkupanBrojStudenata) VALUES ('СИ', 'Софтверско инжењерство',0);
-INSERT INTO `Fakultet_VP_2025`.`SMER` (Oznaka, Naziv, UkupanBrojStudenata) VALUES ('ИТ', 'Информационе технологије',0);
+INSERT INTO `Fakultet_VP_2025`.`SMER` (Oznaka, Naziv, UkupanBrojStudenata) VALUES ('SI', 'Softversko inženjerstvo',0);
+INSERT INTO `Fakultet_VP_2025`.`SMER` (Oznaka, Naziv, UkupanBrojStudenata) VALUES ('IT', 'Informacione tehnologije',0);
 
 

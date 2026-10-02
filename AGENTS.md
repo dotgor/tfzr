@@ -18,7 +18,6 @@ Key project patterns:
 - `css/`: stylesheet generation via PHP (`stil.php`)
 - `klase/`: connection logic, generic table helpers, and domain-specific DB classes
 - `bazapodataka/`: database scripts and notes
-- `SlikeRedvoznje/`: legacy image assets renamed to match the timetable application
 
 ## Coding conventions to preserve
 

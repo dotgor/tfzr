@@ -88,17 +88,6 @@ if (!isset($korisnik)) {
   - listing pages load `delovi/desnoRedvoznjeLista.php`
   - edit forms load `delovi/desnoRedvoznjeIzmeniForm.php`
 - Preserve the current markup style: inline `style` attributes, `<table>`, `border`, `cellpadding`, `cellspacing`, and `font` tags already used in the project.
-- For file uploads, keep the legacy pattern used by the edit flow:
-
-```php
-if (isset($_FILES["nazivFajlaFotografije"]["name"])) {
-    $tmp_name = $_FILES['nazivFajlaFotografije']['tmp_name'];
-    $location = 'SlikeRedvoznje/';
-    move_uploaded_file($tmp_name, $location . $name);
-}
-```
-
-- When creating or editing pages, keep HTML generation in the same legacy style; do not replace it with template engines, JSX, or a modern frontend abstraction.
 
 ## Data-access and UI action patterns already in use
 

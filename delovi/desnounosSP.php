@@ -27,7 +27,7 @@
 <td style="width:3%;">
 </td>
 <td align="left">
-<b><font face="Trebuchet MS" color="black" size="3px">УНОС НОВОГ СТУДЕНТА применом stored procedure</b></br>
+<b><font face="Trebuchet MS" color="black" size="3px">УНОС НОВОГ РЕДА ВОЖЊЕ применом stored procedure</b></br>
 </td>
 <td style="width:3%;">
 </td>
@@ -50,123 +50,56 @@
 <td align="center">
 
 
-<!------------------------FORMA ZA UNOS ---- ACTION="studentsnimi.php" --->
-<table style="width:95%;" bgcolor="#D8E7F4" padding:0" align="center" cellspacing="0" cellpadding="0" border="0">
-<form name="FormaZaUnosStudenta" action="studentsnimiSP.php" METHOD="POST" enctype="multipart/form-data" >
-
+<!------------------------FORMA ZA UNOS REDA VOZNJE PRIMENOM STORED PROCEDURE --->
+<table style="width:95%;" bgcolor="#D8E7F4" align="center" cellspacing="0" cellpadding="6" border="0">
+<form name="FormaZaUnosRedaVoznjeSP" action="RedvoznjeSnimiSP.php" method="POST">
 <tr>
-<td align="right" valign="bottom">     
-<b><font face="Trebuchet MS" color="black" size="2px">Број индекса&nbsp;&nbsp;</font></b>
-</td>
-<td align="left" valign="bottom">
-<input name="brojIndeksa" type="text" size="50" placeholder="Unesite broj indeksa"  />
-</td>
-</tr>
-
-<tr>
-<td align="right" valign="bottom">
-<font face="Trebuchet MS" color="#D8E7F4" size="2px">.</font><br/>
-</td>
-<td align="left" valign="bottom">
-</td>
-</tr>
-
-<tr>
-<td align="right" valign="bottom">
-<b><font face="Trebuchet MS" color="black" size="2px">Презиме&nbsp;&nbsp;</font><br/></b>
-</td>
-<td align="left" valign="bottom">
-<input name="prezime" type="text" size="50" placeholder="Unesite prezime"/>
-</td>
-</tr>
-
-<tr>
-<td align="right" valign="bottom">
-<font face="Trebuchet MS" color="#D8E7F4" size="2px">.</font><br/>
-</td>
-<td align="left" valign="bottom">
-</td>
-</tr>
-
-<tr>
-<td align="right" valign="bottom">
-<b><font face="Trebuchet MS" color="black" size="2px">Име&nbsp;&nbsp;</font><br/></b>
-</td>
-<td align="left" valign="bottom">
-<input name="ime" type="text" size="50" placeholder="Unesite ime"/>
-</td>
-</tr>
-
-<tr>
-<td align="right" valign="bottom">
-<font face="Trebuchet MS" color="#D8E7F4" size="2px">.</font><br/>
-</td>
-<td align="left" valign="bottom">
-</td>
-</tr>
-
-<tr>
-<td align="right" valign="bottom">
-<b><font face="Trebuchet MS" color="black" size="2px">Смер&nbsp;&nbsp;</font><br/></b>
-</td>
-<td align="left" valign="bottom">
-<select name="oznakaSmera" required TABINDEX=7>		
-	<option value="">izaberite...</option>
+<td align="right"><b><font face="Trebuchet MS" color="black" size="2px">Од места&nbsp;&nbsp;</font></b></td>
+<td align="left">
+<select name="iz" required>
+	<option value="">Изаберите полазно место...</option>
 	<?php
-	// upis vrednosti iz bp - Tip vozila
-		
-	// PREDSTAVLJANJE U OPTION KROZ FOR CIKLUS
-	if ($UkupanBrojZapisa>0) 
-	{					
-		for ($brojacSmerova = 0; $brojacSmerova < $UkupanBrojZapisa; $brojacSmerova++) 
-			{
-				$oznakaSmera =$SmerObject->DajVrednostPoRednomBrojuZapisaPoRBPolja ($KolekcijaZapisa, $brojacSmerova, 0);				
-				$nazivSmera=$SmerObject->DajVrednostPoRednomBrojuZapisaPoRBPolja ($KolekcijaZapisa, $brojacSmerova, 1);				
-				echo "<option value=\"$oznakaSmera\">$nazivSmera</option>";						
-			} //for
-										
-	} // 
-	
+	if ($UkupanBrojZapisa > 0) {
+		// PREDSTAVLJANJE GRADOVA U OPTION KROZ FOR CIKLUS
+		for ($brojacGrada = 0; $brojacGrada < $UkupanBrojZapisa; $brojacGrada++) {
+			$idGrada = (int) $GradoviObject->DajVrednostPoRednomBrojuZapisaPoRBPolja($KolekcijaZapisa, $brojacGrada, 0);
+			$nazivGrada = $GradoviObject->DajVrednostPoRednomBrojuZapisaPoRBPolja($KolekcijaZapisa, $brojacGrada, 1);
+			echo '<option value="' . $idGrada . '">' . htmlspecialchars($nazivGrada, ENT_QUOTES, 'UTF-8') . '</option>';
+		}
+	}
 	?>
-		
 </select>
-
-
 </td>
 </tr>
-
 <tr>
-<td align="right" valign="bottom">
-<font face="Trebuchet MS" color="#D8E7F4" size="2px">.</font><br/>
-</td>
-<td align="left" valign="bottom">
+<td align="right"><b><font face="Trebuchet MS" color="black" size="2px">До места&nbsp;&nbsp;</font></b></td>
+<td align="left">
+<select name="ka" required>
+	<option value="">Изаберите одредишно место...</option>
+	<?php
+	if ($UkupanBrojZapisa > 0) {
+		for ($brojacGrada = 0; $brojacGrada < $UkupanBrojZapisa; $brojacGrada++) {
+			$idGrada = (int) $GradoviObject->DajVrednostPoRednomBrojuZapisaPoRBPolja($KolekcijaZapisa, $brojacGrada, 0);
+			$nazivGrada = $GradoviObject->DajVrednostPoRednomBrojuZapisaPoRBPolja($KolekcijaZapisa, $brojacGrada, 1);
+			echo '<option value="' . $idGrada . '">' . htmlspecialchars($nazivGrada, ENT_QUOTES, 'UTF-8') . '</option>';
+		}
+	}
+	?>
+</select>
 </td>
 </tr>
-
 <tr>
-<td align="right" valign="bottom">
-<b><font face="Trebuchet MS" color="black" size="2px">Фотографија&nbsp;&nbsp;</font><br/></b>
-</td>
-<td align="left" valign="bottom">
-<input name="nazivFajlaFotografije" type="file" size="50" placeholder="Unesite naziv fajla fotografije"/>
-</td>
+<td align="right"><b><font face="Trebuchet MS" color="black" size="2px">Време поласка&nbsp;&nbsp;</font></b></td>
+<td align="left"><input name="vreme" type="text" pattern="(?:[01][0-9]|2[0-3]):[0-5][0-9]" maxlength="5" placeholder="HH:MM" title="Унесите време у 24-часовном формату HH:MM" required /></td>
 </tr>
-
-
-<!-------------------------- prazan red ------->
 <tr>
-<td align="right" valign="bottom">
-<font face="Trebuchet MS" color="#D8E7F4" size="2px">.</font><br/>
-</td>
-<td align="left" valign="bottom">
-<font face="Trebuchet MS" color="#D8E7F4" size="2px">.</font><br/>
-</td>
+<td align="right"><b><font face="Trebuchet MS" color="black" size="2px">Цена&nbsp;&nbsp;</font></b></td>
+<td align="left"><input name="cena" type="number" min="0" step="0.01" required /></td>
+</tr>
 <tr>
-
-<td>       
-</td>
-<td><input TYPE="submit" name="snimiButton" value="СНИМИ" TABINDEX=3/>
-</td>
+<td></td>
+<td><input type="submit" name="snimiButton" value="СНИМИ" /></td>
+</tr>
 </form>
 </table>
 

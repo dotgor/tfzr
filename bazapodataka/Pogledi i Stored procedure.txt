@@ -6,15 +6,15 @@ CREATE VIEW `Fakultet_VP_2025`.`SviPodacioStudentima` AS select `STUDENT`.`BrojI
 CREATE VIEW `Fakultet_VP_2025`.`SviPodacioStudentimaSaSlikom` AS select `STUDENT`.`BrojIndeksa`, `STUDENT`.`Prezime`, `STUDENT`.`Ime`, `SMER`.`Naziv` as `NazivSmera`, `STUDENT`.`NazivFajlaFotografije`   from `Fakultet_VP_2025`.`STUDENT` INNER JOIN `Fakultet_VP_2025`.`SMER` ON `Fakultet_VP_2025`.`STUDENT`.`OznakaSmera`=`Fakultet_VP_2025`.`SMER`.`Oznaka`;
 
 
-RESENJE ZA STORED PROCEDURU- insert into
+RESENJE ZA STORED PROCEDURU - unos reda voznje
 -----------------------
 USE `Fakultet_VP_2025`;
-DROP procedure IF EXISTS `DodajStudenta`;
+DROP procedure IF EXISTS `DodajRedVoznje`;
 DELIMITER $$
 USE `Fakultet_VP_2025`$$
-CREATE PROCEDURE `DodajStudenta` (IN BrojIndeksaParametar varchar(10), IN PrezimeParametar varchar(50), IN ImeParametar varchar(50), IN OznakaSmeraParametar char(2), IN NazivFajlaFotografijeParametar varchar(100))
+CREATE PROCEDURE `DodajRedVoznje` (IN IzParametar int unsigned, IN KaParametar int unsigned, IN VremeParametar time, IN CenaParametar decimal(10,2))
 BEGIN
-INSERT INTO `STUDENT` (`BrojIndeksa`, `Prezime`, `Ime`, `OznakaSmera`, `NazivFajlaFotografije`) VALUES (BrojIndeksaParametar, PrezimeParametar, ImeParametar,OznakaSmeraParametar, NazivFajlaFotografijeParametar);
+INSERT INTO `red_voznje` (`iz`, `ka`, `vreme`, `cena`) VALUES (IzParametar, KaParametar, VremeParametar, CenaParametar);
 END
 $$
 DELIMITER ;

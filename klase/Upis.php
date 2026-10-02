@@ -15,12 +15,19 @@ public function DaLiImaMestaZaUpis($GradIzParametar)
 $odgovor="NE";
 
 // izdvajanje ogranicenja iz XML
-$xml=simplexml_load_file("klase/".$GradIzParametar.".xml") or die("Nije uspesno ucitavanje fajla sa ogranicenjem!");
+$GradIdParametar = (int) $GradIzParametar;
+$SQLGrad = "SELECT naziv FROM `" . $this->NazivBazePodataka . "`.`gradovi` WHERE id = " . $GradIdParametar;
+$this->UcitajSvePoUpitu($SQLGrad);
+if ($this->BrojZapisa < 1) {
+	return $odgovor;
+}
+$NazivGrada = $this->DajVrednostPoRednomBrojuZapisaPoRBPolja($this->Kolekcija, 0, 0);
+$xml=simplexml_load_file(__DIR__ . DIRECTORY_SEPARATOR . $NazivGrada . ".xml") or die("Nije uspesno ucitavanje fajla sa ogranicenjem!");
 $maxBrojPolazaka=$xml->MaxBrPolazaka;
 
 // izdvajanje koliko trenutno imamo upisanih za taj smer u bazi podataka
-$NazivTrazenogPolja="count(`BrojIndeksa`)";
-$KriterijumFiltriranja="`GradIz`='".$GradIzParametar."'";
+$NazivTrazenogPolja="count(`id`)";
+$KriterijumFiltriranja="`iz`='".$GradIdParametar."'";
 $KriterijumSortiranja="`id`"; // nema potrebe da se sortira, ali ne menjamo baznu klasu
 $trenutanBrojPolazaka=$this->DajVrednostJednogPoljaPrvogZapisa($NazivTrazenogPolja, $KriterijumFiltriranja, $KriterijumSortiranja); 
 

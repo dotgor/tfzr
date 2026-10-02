@@ -110,7 +110,7 @@
 <td style="width:1px;">
 </td>
 <td style="align:center">
- <a href="StudentiLista.php" ><font face="Trebuchet MS" color="black" size="2px">&nbsp;Листа и ажурирање</font></a>
+ <a href="RedvoznjeLista.php" ><font face="Trebuchet MS" color="black" size="2px">&nbsp;Листа и ажурирање</font></a>
 </td>
 <td>
 </td>
@@ -122,7 +122,7 @@
 <td style="width:1px;">
 </td>
 <td style="align:center">
- <a href="StudentiStampa.php" ><font face="Trebuchet MS" color="black" size="2px">&nbsp;Штампа</font></a>
+ <a href="RedvoznjeStampa.php" ><font face="Trebuchet MS" color="black" size="2px">&nbsp;Штампа</font></a>
 </td>
 <td>
 </td>
@@ -134,7 +134,7 @@
 <td style="width:1px;">
 </td>
 <td style="align:center">
- <a href="StudentiParametarskaStampa.php" ><font face="Trebuchet MS" color="black" size="2px">&nbsp;Параметарска штампа</font></a>
+ <a href="RedvoznjeParametarskaStampa.php" ><font face="Trebuchet MS" color="black" size="2px">&nbsp;Параметарска штампа</font></a>
 </td>
 <td>
 </td>

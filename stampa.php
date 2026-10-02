@@ -1,46 +1,27 @@
 ﻿<?php
-// OVO JE SUSTINSKO ODJAVLJIVANJE KORISNIKA
 session_start();
-// remove all session variables
-session_unset(); 
-// destroy the session 
-session_destroy(); 
 
-// REALIZACIJA CITANJA SVIH I FILTRIRANIH PODATAKA
+// REALIZACIJA CITANJA REDOVA VOZNJE
 
 //KONEKCIJA KA SERVERU
 	
 // koristimo klasu za poziv procedure za konekciju
-	require "delovi/klase/Konekcija.php";
-	$objKonekcija = new Konekcija();
-	$objKonekcija->KonektujSe();
-	$db_handle = $objKonekcija->UspehKonekcijeNaMYSQL;
-	$bazapodataka=$objKonekcija->bazapodataka;
-    $UspehKonekcijeNaBazu=$objKonekcija->UspehKonekcijeNaBazuPodataka;
-	
-// NASTAVAK
-       if ($UspehKonekcijeNaBazu)
-           {
-            // dodatak da moze da radi sa UTF8
-	    mysql_query('SET NAMES "utf8"',$db_handle);
-	    
-		if (isset($_POST["filtriraj"]))
-			{
-			// filtrirano
-			$FilterVrednost=$_POST["filter"];
-            $SQL = "select * from `".$bazapodataka."`.`VOZILO` WHERE NAZIVPROIZVODJACA like '%".$FilterVrednost."%' ORDER BY BROJPREDJENIHKILOMETARA DESC";
-			}
-			else
-			{
-			// prikaz svih - PRVO UCITAVANJE INDEX.PHP, dugme "SVI"
-			$SQL = "select * from `".$bazapodataka."`.`VOZILO` ORDER BY BROJPREDJENIHKILOMETARA DESC";
-			}
-        
-
-			$result = mysql_query($SQL);
-            $num_rows = mysql_num_rows($result);
-
-            }
+	require "klase/BaznaKonekcija.php";
+	require "klase/BaznaTabela.php";
+	$KonekcijaObject = new Konekcija('klase/BaznaParametriKonekcije.xml');
+	$KonekcijaObject->connect();
+	$RedVoznjeObject = null;
+	if ($KonekcijaObject->konekcijaDB)
+	{
+		$RedVoznjeObject = new Tabela($KonekcijaObject, "red_voznje");
+		$UpitRedaVoznje = "SELECT red.id, polazni.naziv, odredisni.naziv, red.vreme, red.cena "
+			. "FROM `" . $KonekcijaObject->KompletanNazivBazePodataka . "`.`red_voznje` red "
+			. "INNER JOIN `" . $KonekcijaObject->KompletanNazivBazePodataka . "`.`gradovi` polazni ON polazni.id = red.iz "
+			. "INNER JOIN `" . $KonekcijaObject->KompletanNazivBazePodataka . "`.`gradovi` odredisni ON odredisni.id = red.ka "
+			. "ORDER BY red.iz, red.vreme";
+		$RedVoznjeObject->UcitajSvePoUpitu($UpitRedaVoznje);
+		$RedVoznjeObject->PrebaciKolekcijuUListu($RedVoznjeObject->Kolekcija);
+	}
 
 ?>
 

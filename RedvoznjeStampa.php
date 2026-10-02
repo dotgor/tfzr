@@ -1,30 +1,30 @@
 ﻿<?php
+// OVO JE SUSTINSKO ODJAVLJIVANJE KORISNIKA
 session_start();
 
-$BrojIndeksaZaStampu=$_POST['BrojIndeksaFilter'];
-
-// KONEKTOVANJE NA BAZU
-	require "klase/BaznaKonekcija.php";
-	$KonekcijaObject = new Konekcija("klase/BaznaParametriKonekcije.xml");
-	$KonekcijaObject->connect();
+//KONEKCIJA KA SERVERU
 	
-	// PREUZIMANJE STARIH VREDNOSTI ZA IZABRANOG STUDENTA
-	require "klase/BaznaTabela.php";
-	require "klase/DBStudentV.php";
-	$StudentObject = new DBStudent($KonekcijaObject, 'student');
-	$StudentObject->DajSvePodatkeOStudentima($BrojIndeksaZaStampu);
-	$KolekcijaZapisaStudenata= $StudentObject->Kolekcija;
-	$UkupanBrojZapisaStudenata = $StudentObject->BrojZapisa;
-	
-	if ($UkupanBrojZapisaStudenata>0) 
-	{
-		$row=0;  // prvi i jedini red ima taj id
-		$BrojIndeksa=$StudentObject->DajVrednostPoRednomBrojuZapisaPoRBPolja ($KolekcijaZapisaStudenata, $row, 0);//mysql_result($result,$row,"REGISTARSKIBROJ");
-		$Prezime=$StudentObject->DajVrednostPoRednomBrojuZapisaPoRBPolja ($KolekcijaZapisaStudenata, $row, 1);
-		$Ime=$StudentObject->DajVrednostPoRednomBrojuZapisaPoRBPolja ($KolekcijaZapisaStudenata, $row, 2);
-		$NazivSmera=$StudentObject->DajVrednostPoRednomBrojuZapisaPoRBPolja ($KolekcijaZapisaStudenata, $row, 3);
-		$NazivFajlaFotografije=$StudentObject->DajVrednostPoRednomBrojuZapisaPoRBPolja ($KolekcijaZapisaStudenata, $row, 4);
-	}         
+// koristimo klasu za poziv procedure za konekciju
+require "klase/BaznaKonekcija.php";
+require "klase/BaznaTabela.php";
+$KonekcijaObject = new Konekcija('klase/BaznaParametriKonekcije.xml');
+$KonekcijaObject->connect();
+if ($KonekcijaObject->konekcijaDB) // uspesno realizovana konekcija ka DBMS i bazi podataka
+{	
+	// prikaz svih redova voznje sa nazivima polaznog i odredisnog mesta
+	$RedVoznjeObject = new Tabela($KonekcijaObject, "red_voznje");
+	$UpitRedaVoznje = "SELECT red.id, polazni.naziv, odredisni.naziv, red.vreme, red.cena "
+		. "FROM `" . $KonekcijaObject->KompletanNazivBazePodataka . "`.`red_voznje` red "
+		. "INNER JOIN `" . $KonekcijaObject->KompletanNazivBazePodataka . "`.`gradovi` polazni ON polazni.id = red.iz "
+		. "INNER JOIN `" . $KonekcijaObject->KompletanNazivBazePodataka . "`.`gradovi` odredisni ON odredisni.id = red.ka "
+		. "ORDER BY red.iz, red.vreme";
+	$RedVoznjeObject->UcitajSvePoUpitu($UpitRedaVoznje);
+	$RedVoznjeObject->PrebaciKolekcijuUListu($RedVoznjeObject->Kolekcija);
+}
+else
+{
+	echo "Неуспешна конекција!";
+}
 
 ?>
 
@@ -66,9 +66,9 @@ $BrojIndeksaZaStampu=$_POST['BrojIndeksaFilter'];
 <td style="width:1%;">
 </td>
 
-<?php echo "<td align=\"right\" valign=\"middle\">"; ?>
+<td style="width:80%;padding:0" cellspacing="0" cellpadding="0" border="0" valign="top">
 <!------- GLAVNI SADRZAJ desno ----------->  
-<?php include 'delovi/desnostampaostudentu.php';?>
+<?php include 'delovi/desnostampa.php';?>
 </td>
 
 <td style="width:1%;">

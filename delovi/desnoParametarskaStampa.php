@@ -14,10 +14,26 @@
 </br>
 <b>ПАРАМЕТАРСКА ШТАМПА</br> 
 </br>
-<form action="StampaPodatakaOStudentu.php" method="POST">
-Број индекса: <input type="text" name="BrojIndeksaFilter" />
+<?php if (!$KonekcijaObject->konekcijaDB) { ?>
+Неуспешна конекција са базом података.
+<?php } elseif (!$GradoviObject || $GradoviObject->BrojZapisa == 0) { ?>
+Нема унетих градова.
+<?php } else { ?>
+<form action="StampaPodatakaORedvoznje.php" method="POST">
+Град поласка:
+<select name="GradIzFilter" required>
+	<option value="">Изаберите град...</option>
+	<?php foreach ($GradoviObject->ListaZapisa as $Grad) { ?>
+	<option value="<?php echo (int) $Grad[0]; ?>"><?php echo htmlspecialchars($Grad[1], ENT_QUOTES, 'UTF-8'); ?></option>
+	<?php } ?>
+</select>
 <input type="submit" name="stampaj" value="STAMPAJ" />
 </form>
+<?php }
+if ($KonekcijaObject->konekcijaDB) {
+	$KonekcijaObject->disconnect();
+}
+?>
 </font>
 
 </td>

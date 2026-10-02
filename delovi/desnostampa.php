@@ -25,7 +25,7 @@
 
 <td align="center" valign="middle"> 
 <font face="Trebuchet MS" color="darkblue" size="5px">
-<b>СПИСАК СТУДЕНАТА</br> </font>
+<b>РЕД ВОЖЊЕ АУТОБУСА</br> </font>
 </td>
 
 <td style="width:5%;">
@@ -43,54 +43,58 @@
 
 <?php
 
-// PRETHODNI KOD PREUZIMA PODATKE I TO JE NA INDEX.PHP
+// PRETHODNI KOD PREUZIMA PODATKE IZ BAZE I POPUNJAVA KOLEKCIJU
 
-if ($StudentViewObject->BrojZapisa==0)
+if (!$KonekcijaObject->konekcijaDB)
 {
-	echo "НЕМА ЗАПИСА У ТАБЕЛИ!";
+	echo "Неуспешна конекција са базом података!";
+}
+elseif ($RedVoznjeObject->BrojZapisa==0)
+{
+	echo "НЕМА УНЕТИХ ПОЛАЗАКА!";
 }
 else
 {
 	// ------------ zaglavlje ----------------
 	echo "<table style=\"width:90%; padding:0\" align=\"center\" cellspacing=\"0\" cellpadding=\"0\" border=\"1\"  bgcolor=\"white\">";
 	echo "<tr>";
-	echo "<td style=\"width:10%;\">";
-	echo "<font face=\"Trebuchet MS\" color:#3F4534 size=\"3px\">БРОЈ ИНДЕКСА</font><br/>";
+	echo "<td style=\"width:25%;\">";
+	echo "<font face=\"Trebuchet MS\" color:#3F4534 size=\"3px\">ОД МЕСТА</font><br/>";
 	echo "</td>";
-	echo "<td style=\"width:20%;\">";
-	echo "<b><font face=\"Trebuchet MS\" color:#3F4534 size=\"3px\">ПРЕЗИМЕ</font><br/>";
+	echo "<td style=\"width:25%;\">";
+	echo "<b><font face=\"Trebuchet MS\" color:#3F4534 size=\"3px\">ДО МЕСТА</font><br/>";
 	echo "</td>";
-	echo "<td style=\"width:20%;\">";
-	echo "<b><font face=\"Trebuchet MS\" color:#3F4534 size=\"3px\">ИМЕ</font><br/>";
+	echo "<td style=\"width:25%;\">";
+	echo "<b><font face=\"Trebuchet MS\" color:#3F4534 size=\"3px\">ВРЕМЕ ПОЛАСКА</font><br/>";
 	echo "</td>";
-	echo "<td style=\"width:50%;\">";
-	echo "<b><font face=\"Trebuchet MS\" color:#3F4534 size=\"3px\">НАЗИВ СМЕРА</font><br/>";
+	echo "<td style=\"width:25%;\">";
+	echo "<b><font face=\"Trebuchet MS\" color:#3F4534 size=\"3px\">ЦЕНА (RSD)</font><br/>";
 	echo "</td>";
 	echo "</tr>";
 
-	for ($RBZapisa = 0; $RBZapisa < $StudentViewObject->BrojZapisa; $RBZapisa++) 
+	for ($RBZapisa = 0; $RBZapisa < $RedVoznjeObject->BrojZapisa; $RBZapisa++)
 	{
 						
 	// CITANJE VREDNOSTI IZ MEMORIJSKE KOLEKCIJE $RESULT I DODELJIVANJE PROMENLJIVIM
-	$BrojIndeksa=$StudentViewObject->DajVrednostPoRednomBrojuZapisaPoRBPolja ($StudentViewObject->Kolekcija, $RBZapisa, 0);//mysql_result($result,$row,"REGISTARSKIBROJ");
-	$Prezime=$StudentViewObject->DajVrednostPoRednomBrojuZapisaPoRBPolja ($StudentViewObject->Kolekcija, $RBZapisa, 1);
-	$Ime=$StudentViewObject->DajVrednostPoRednomBrojuZapisaPoRBPolja ($StudentViewObject->Kolekcija, $RBZapisa, 2);
-	$NazivSmera=$StudentViewObject->DajVrednostPoRednomBrojuZapisaPoRBPolja ($StudentViewObject->Kolekcija, $RBZapisa, 3);
-	$NazivFajlaFotografije=$StudentViewObject->DajVrednostPoRednomBrojuZapisaPoRBPolja ($StudentViewObject->Kolekcija, $RBZapisa, 4);
+	$RedVoznje=$RedVoznjeObject->ListaZapisa[$RBZapisa];
+	$GradIz=htmlspecialchars($RedVoznje[1], ENT_QUOTES, 'UTF-8');
+	$GradDo=htmlspecialchars($RedVoznje[2], ENT_QUOTES, 'UTF-8');
+	$Vreme=htmlspecialchars(substr($RedVoznje[3], 0, 5), ENT_QUOTES, 'UTF-8');
+	$Cena=htmlspecialchars(number_format((float) $RedVoznje[4], 2, ',', '.'), ENT_QUOTES, 'UTF-8');
 
 	// CRTANJE REDA TABELE SA PODACIMA
 	echo "<tr>";
 	echo "<td>";
-	echo "<font face=\"Trebuchet MS\" color:#3F4534 size=\"3px\">$BrojIndeksa</font><br/>";
+	echo "<font face=\"Trebuchet MS\" color:#3F4534 size=\"3px\">$GradIz</font><br/>";
 	echo "</td>";
 	echo "<td>";
-	echo "<font face=\"Trebuchet MS\" color:#3F4534 size=\"3px\">$Prezime</font><br/>";
+	echo "<font face=\"Trebuchet MS\" color:#3F4534 size=\"3px\">$GradDo</font><br/>";
 	echo "</td>";
 	echo "<td>";
-	echo "<font face=\"Trebuchet MS\" color:#3F4534 size=\"3px\">$Ime</font><br/>";
+	echo "<font face=\"Trebuchet MS\" color:#3F4534 size=\"3px\">$Vreme</font><br/>";
 	echo "</td>";
 	echo "<td>";
-	echo "<font face=\"Trebuchet MS\" color:#3F4534 size=\"3px\">$NazivSmera</font><br/>";
+	echo "<font face=\"Trebuchet MS\" color:#3F4534 size=\"3px\">$Cena</font><br/>";
 	echo "</td>";
 	echo "</tr>";
 
@@ -108,14 +112,16 @@ else
 	echo "<font face=\"Trebuchet MS\" color:#3F4534 size=\"3px\"></font><br/>";
 	echo "</td>";
 	echo "<td align=\"right\" valign=\"middle\">"; 
-	echo "<font face=\"Trebuchet MS\" color:#3F4534 size=\"2px\">УКУПНO: ".$StudentViewObject->BrojZapisa."</font>&nbsp;&nbsp;<br/>";
+	echo "<font face=\"Trebuchet MS\" color:#3F4534 size=\"2px\">УКУПНО: ".$RedVoznjeObject->BrojZapisa."</font>&nbsp;&nbsp;<br/>";
 	echo "</td>";
 	echo "</tr>";
 
 
 	echo "</table>";
 }
-$KonekcijaObject->disconnect();
+if ($KonekcijaObject->konekcijaDB) {
+	$KonekcijaObject->disconnect();
+}
 
 ?>
 

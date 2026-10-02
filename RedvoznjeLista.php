@@ -21,25 +21,15 @@
 	$KonekcijaObject->connect();
 	if ($KonekcijaObject->konekcijaDB) // uspesno realizovana konekcija ka DBMS i bazi podataka
     {	
-		//echo "Успешна конекција!";
-		require "klase/DBStudentV.php";
-		$StudentViewObject = new DBStudent($KonekcijaObject,"student");
-		if (isset($_GET['filtriraj']))
-			{
-				// prikaz filtriranih podataka primenom pogleda nad kojim je dodat filter
-				$filter=$_GET['filter'];
-				$StudentViewObject->DajSvePodatkeOStudentima($filter);
-
-			}
-			else
-			{
-				// prikaz svih podataka primenom pogleda koji je u bazi podataka
-				$filter=null;
-				$StudentViewObject->DajSvePodatkeOStudentima($filter);
-				// sada raspolazemo sa:
-				//$StudentViewObject->Kolekcija 
-				//$StudentViewObject->BrojZapisa
-			}
+		// prikaz svih redova voznje sa nazivima gradova
+		$RedVoznjeObject = new Tabela($KonekcijaObject, "red_voznje");
+		$UpitRedaVoznje = "SELECT red.id, polazni.naziv, odredisni.naziv, red.vreme, red.cena "
+			. "FROM `" . $KonekcijaObject->KompletanNazivBazePodataka . "`.`red_voznje` red "
+			. "INNER JOIN `" . $KonekcijaObject->KompletanNazivBazePodataka . "`.`gradovi` polazni ON polazni.id = red.iz "
+			. "INNER JOIN `" . $KonekcijaObject->KompletanNazivBazePodataka . "`.`gradovi` odredisni ON odredisni.id = red.ka "
+			. "ORDER BY red.iz, red.vreme";
+		$RedVoznjeObject->UcitajSvePoUpitu($UpitRedaVoznje);
+		$RedVoznjeObject->PrebaciKolekcijuUListu($RedVoznjeObject->Kolekcija);
 
 
 
@@ -99,7 +89,7 @@
 
 <td style="width:80%;padding:0" cellspacing="0" cellpadding="0" border="0" valign="top">
 <!------- GLAVNI SADRZAJ desno ----------->  
-<?php include 'delovi/desnoStudentiLista.php';?>
+<?php include 'delovi/desnoRedvoznjeLista.php';?>
 </td>
 
 <td style="width:1%;">

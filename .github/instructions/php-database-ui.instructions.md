@@ -21,20 +21,19 @@ $KonekcijaObject = new Konekcija('klase/BaznaParametriKonekcije.xml');
 $KonekcijaObject->connect();
 
 if ($KonekcijaObject->konekcijaDB) {
-    require "klase/DBStudent.php";
-    $StudentObject = new DBStudent($KonekcijaObject, 'student');
-    $StudentObject->UcitajStudentaPoBrojuIndeksa($brojIndeksa);
+    $RedVoznjeObject = new Tabela($KonekcijaObject, 'red_voznje');
+  $RedVoznjeObject->UcitajSve('id');
 }
 ```
 
-- Reuse table-specific classes from `klase/` such as `DBStudent`, `DBSmer`, `DBKorisnik`, and the shared base `Tabela`.
+  - Reuse the shared `Tabela` class for timetable and city queries, and `DBRedVoznjeSP` for stored-procedure insertion.
 - Keep the legacy flow of `connect() -> instantiate table class -> call CRUD/query method -> disconnect()`.
 - Preserve the main DB helper methods already used in `BaznaTabela.php`:
   - `UcitajSvePoUpitu($Upit)`
   - `DajVrednostPoRednomBrojuZapisaPoRBPolja($Kolekcija, $RBZapisa, $RBPolja)`
   - `IzvrsiAktivanSQLUpit($AktivanSQLUpit)`
   - `PostojiZapis($KriterijumFiltriranja)`
-- When a page needs data from a view or filtered query, use the same pattern as `DBStudentV.php`: build a SQL query and pass it to `UcitajSvePoUpitu()`.
+- When a page needs data from a joined or filtered query, build a SQL query and pass it to `UcitajSvePoUpitu()`.
 - Keep SQL names and column names exactly as they exist in the database schema and the current classes.
 - Do not create ad hoc database logic in page files when an existing DB helper already exists.
 
@@ -86,15 +85,15 @@ if (!isset($korisnik)) {
 
 - Use existing page names and include patterns. For example:
   - root page loads layout with `delovi/zaglavljeindex.php`, `delovi/desnopocetna.php`, and `delovi/footer.php`
-  - listing pages load `delovi/desnoStudentiLista.php`
-  - edit forms load `delovi/desnoStudentIzmeniForm.php`
+  - listing pages load `delovi/desnoRedvoznjeLista.php`
+  - edit forms load `delovi/desnoRedvoznjeIzmeniForm.php`
 - Preserve the current markup style: inline `style` attributes, `<table>`, `border`, `cellpadding`, `cellspacing`, and `font` tags already used in the project.
 - For file uploads, keep the legacy pattern used by the edit flow:
 
 ```php
 if (isset($_FILES["nazivFajlaFotografije"]["name"])) {
     $tmp_name = $_FILES['nazivFajlaFotografije']['tmp_name'];
-    $location = 'SlikeStudenata/';
+    $location = 'SlikeRedvoznje/';
     move_uploaded_file($tmp_name, $location . $name);
 }
 ```
@@ -104,10 +103,10 @@ if (isset($_FILES["nazivFajlaFotografije"]["name"])) {
 ## Data-access and UI action patterns already in use
 
 - Listing data: query a table or view, then iterate rows with `for` loops and call `DajVrednostPoRednomBrojuZapisaPoRBPolja()`.
-- Deletion: use a POST form and call `ObrisiStudenta($BrojIndeksa)` from the DB class.
-- Update: use a hidden `StariBrojIndeksa` value and call `IzmeniStudenta(...)`.
-- Insert: create a DB class instance, set its properties, and call the insert method such as `DodajNovogStudenta()`.
-- Form actions commonly redirect back to the list page after success using `header('Location:StudentiLista.php');`.
+- Deletion: use a POST form with `IdRedaVoznje` and delete through `Tabela::IzvrsiAktivanSQLUpit()`.
+- Update: use a hidden `IdRedaVoznje` value and update the timetable row through `Tabela`.
+- Insert: use `Tabela` for ordinary insertion or `DBRedVoznjeSP::DodajRedVoznje()` for the stored-procedure flow.
+- Form actions commonly redirect back to the timetable list after success using `header('Location:RedvoznjeLista.php');`.
 
 ## Constraints for future edits
 

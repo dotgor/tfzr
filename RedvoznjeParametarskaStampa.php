@@ -2,38 +2,16 @@
 // OVO JE SUSTINSKO ODJAVLJIVANJE KORISNIKA
 session_start();
 
-//KONEKCIJA KA SERVERU
-	
-// koristimo klasu za poziv procedure za konekciju
 require "klase/BaznaKonekcija.php";
 require "klase/BaznaTabela.php";
 $KonekcijaObject = new Konekcija('klase/BaznaParametriKonekcije.xml');
 $KonekcijaObject->connect();
-if ($KonekcijaObject->konekcijaDB) // uspesno realizovana konekcija ka DBMS i bazi podataka
-{	
-	//echo "Успешна конекција!";
-	require "klase/DBStudentV.php";
-	$StudentViewObject = new DBStudent($KonekcijaObject,"student");
-	if (isset($_GET['filtriraj']))
-		{
-			// prikaz filtriranih podataka primenom pogleda nad kojim je dodat filter
-			$filter=$_GET['filter'];
-			$StudentViewObject->DajSvePodatkeOStudentima($filter);
+$GradoviObject = null;
 
-		}
-		else
-		{
-			// prikaz svih podataka primenom pogleda koji je u bazi podataka
-			$filter=null;
-			$StudentViewObject->DajSvePodatkeOStudentima($filter);
-			// sada raspolazemo sa:
-			//$StudentViewObject->Kolekcija 
-			//$StudentViewObject->BrojZapisa
-		}
-}
-else
-{
-	echo "Неуспешна конекција!";
+if ($KonekcijaObject->konekcijaDB) {
+	$GradoviObject = new Tabela($KonekcijaObject, "gradovi");
+	$GradoviObject->UcitajSve("naziv");
+	$GradoviObject->PrebaciKolekcijuUListu($GradoviObject->Kolekcija);
 }
 
 ?>
@@ -56,7 +34,7 @@ else
 <table class="no-spacing" style="width:100%; padding:0" align="center" cellspacing="0" cellpadding="0" border="0" style="border-spacing: 0;">
 
 <!-------------------------- ZAGLAVLJE ------->
-<?php include 'delovi/zaglavljestampa.php';?>
+<?php include 'delovi/zaglavljewelcome.php';?>
 
 
 <!-------------------------- DONJI DEO  ------->
@@ -70,15 +48,22 @@ else
 <!---------------------- SREDINA DONJEG DELA SA SADRZAJEM pocinje ovde ---------------------->
 <td align="center" valign="middle" style="width:80%; padding:0" > 
 
-<table style="width:100%; padding:0" align="center" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF">
+<table style="width:100%; padding:0" align="center" cellspacing="0" cellpadding="0" border="0" bgcolor="#003366">
 
 <tr>
 <td style="width:1%;">
 </td>
 
+<td style="width:15%;padding:0" cellspacing="0" cellpadding="0" border="0" valign="top">
+<?php include 'delovi/menilevoadmin.php';?>
+</td>
+
+<td style="width:1%;">
+</td>
+
 <td style="width:80%;padding:0" cellspacing="0" cellpadding="0" border="0" valign="top">
 <!------- GLAVNI SADRZAJ desno ----------->  
-<?php include 'delovi/desnostampa.php';?>
+<?php include 'delovi/desnoParametarskaStampa.php';?>
 </td>
 
 <td style="width:1%;">
@@ -105,7 +90,7 @@ else
 </tr>
 <!--- DONJI DEO sa donjom ivicom zavrsava ovde  ------->
 <!-- footer panel starts here -->
-<?php include 'delovi/footerstampa.php';?>
+<?php include 'delovi/footer.php';?>
 
 </table>
 

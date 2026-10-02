@@ -23,13 +23,12 @@
 	
 	//echo "KONEKCIJA-BAZA:".$bazapodataka;
 	
-	// IZDVAJANJE PODATAKA KORISTECI KLASU SMER
+	// IZDVAJANJE PODATAKA O GRADOVIMA ZA PADAJUCE LISTE
 	require "klase/BaznaTabela.php";
-	require "klase/DBSmer.php";
-	$SmerObject = new DBSmer($KonekcijaObject, "smer");
-	$SmerObject->UcitajKolekcijuSvihSmerova();
-	$KolekcijaZapisa= $SmerObject->Kolekcija;
-	$UkupanBrojZapisa= $SmerObject->BrojZapisa;
+	$GradoviObject = new Tabela($KonekcijaObject, "gradovi");
+	$GradoviObject->UcitajSve("naziv");
+	$KolekcijaZapisa= $GradoviObject->Kolekcija;
+	$UkupanBrojZapisa= $GradoviObject->BrojZapisa;
 
 ?>
 

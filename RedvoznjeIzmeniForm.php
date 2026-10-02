@@ -11,8 +11,8 @@
 					header ('Location:index.php');
 				}	
 
-// REALIZACIJA CITANJA hidden polja za filter radi pristupa, cita sa StudentiLista
-$StariBrojIndeksaZaIzmenu=$_POST['BrojIndeksa'];
+// REALIZACIJA CITANJA hidden polja za filter radi pristupa, cita sa RedvoznjeLista
+$IdRedaVoznjeZaIzmenu = isset($_POST['IdRedaVoznje']) ? (int) $_POST['IdRedaVoznje'] : 0;
 
 // KONEKTOVANJE NA BAZU
 	require "klase/BaznaKonekcija.php";
@@ -24,30 +24,29 @@ $StariBrojIndeksaZaIzmenu=$_POST['BrojIndeksa'];
 	
 	require "klase/BaznaTabela.php";
 	
-	// IZDVAJANJE PODATAKA KORISTECI KLASU SMER
-	require "klase/DBSmer.php";
-	$SmerObject = new DBSmer($KonekcijaObject, "smer");
-	$SmerObject->UcitajKolekcijuSvihSmerova();
-	$KolekcijaZapisa= $SmerObject->Kolekcija;
-	$UkupanBrojZapisa= $SmerObject->BrojZapisa;
+	// IZDVAJANJE PODATAKA O GRADOVIMA ZA PADAJUCE LISTE
+	$GradoviObject = new Tabela($KonekcijaObject, "gradovi");
+	$GradoviObject->UcitajSve("naziv");
+	$KolekcijaZapisa= $GradoviObject->Kolekcija;
+	$UkupanBrojZapisa= $GradoviObject->BrojZapisa;
 
-	// PREUZIMANJE STARIH VREDNOSTI ZA IZABRANOG STUDENTA
-	require "klase/DBStudent.php";
-	$StudentObject = new DBStudent($KonekcijaObject, 'student');
-	$StudentObject->UcitajStudentaPoBrojuIndeksa($StariBrojIndeksaZaIzmenu);
-	$KolekcijaZapisaStudenata= $StudentObject->Kolekcija;
-	$UkupanBrojZapisaStudenata = $StudentObject->BrojZapisa;
+	// PREUZIMANJE STARIH VREDNOSTI ZA IZABRANI RED VOZNJE
+	$RedVoznjeObject = new Tabela($KonekcijaObject, 'red_voznje');
+	$UpitRedaVoznje = "SELECT id, iz, ka, vreme, cena FROM `" . $KonekcijaObject->KompletanNazivBazePodataka . "`.`red_voznje` WHERE id = " . $IdRedaVoznjeZaIzmenu;
+	$RedVoznjeObject->UcitajSvePoUpitu($UpitRedaVoznje);
+	$KolekcijaZapisaRedaVoznje = $RedVoznjeObject->Kolekcija;
+	$UkupanBrojRedovaVoznje = $RedVoznjeObject->BrojZapisa;
 	
-	if ($UkupanBrojZapisaStudenata>0) 
+	if ($UkupanBrojRedovaVoznje>0)
 	{
 		$row=0;  // prvi i jedini red ima taj id
-		$StariBrojIndeksa=$StudentObject->DajVrednostPoRednomBrojuZapisaPoRBPolja ($KolekcijaZapisaStudenata, $row, 0);//mysql_result($result,$row,"REGISTARSKIBROJ");
-		$StaroPrezime=$StudentObject->DajVrednostPoRednomBrojuZapisaPoRBPolja ($KolekcijaZapisaStudenata, $row, 1);
-		$StaroIme=$StudentObject->DajVrednostPoRednomBrojuZapisaPoRBPolja ($KolekcijaZapisaStudenata, $row, 2);
-		$StaraOznakaSmera=$StudentObject->DajVrednostPoRednomBrojuZapisaPoRBPolja ($KolekcijaZapisaStudenata, $row, 3);
-		$StariNazivFajlaFotografije=$StudentObject->DajVrednostPoRednomBrojuZapisaPoRBPolja ($KolekcijaZapisaStudenata, $row, 4);
+		$RedVoznjeObject->PrebaciKolekcijuUListu($KolekcijaZapisaRedaVoznje);
+		$StariIdRedaVoznje=$RedVoznjeObject->ListaZapisa[$row][0];
+		$StariIz=$RedVoznjeObject->ListaZapisa[$row][1];
+		$StariKa=$RedVoznjeObject->ListaZapisa[$row][2];
+		$StaroVreme=substr($RedVoznjeObject->ListaZapisa[$row][3], 0, 5);
+		$StaraCena=$RedVoznjeObject->ListaZapisa[$row][4];
 	}         
-
 ?>
 
 <!DOCTYPE html>
@@ -97,7 +96,7 @@ $StariBrojIndeksaZaIzmenu=$_POST['BrojIndeksa'];
 
 <td style="width:80%;padding:0" cellspacing="0" cellpadding="0" border="0" valign="top">
 <!------- GLAVNI SADRZAJ desno ----------->  
-<?php include 'delovi/desnoStudentIzmeniForm.php';?>
+<?php include 'delovi/desnoRedvoznjeIzmeniForm.php'; $KonekcijaObject->disconnect();?>
 </td>
 
 <td style="width:1%;">

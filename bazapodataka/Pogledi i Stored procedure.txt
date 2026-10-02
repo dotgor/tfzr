@@ -1,9 +1,7 @@
 RESENJE - POGLEDI
 ------------------------------------------
 CREATE VIEW `Fakultet_VP_2025`.`SviPodacioStudentima` AS select `STUDENT`.`BrojIndeksa`, `STUDENT`.`Prezime`, `STUDENT`.`Ime`, `SMER`.`Naziv` as `NazivSmera` from `Fakultet_VP_2025`.`STUDENT` INNER JOIN `Fakultet_VP_2025`.`SMER` ON `Fakultet_VP_2025`.`STUDENT`.`OznakaSmera`=`Fakultet_VP_2025`.`SMER`.`Oznaka`;
-
-
-CREATE VIEW `Fakultet_VP_2025`.`SviPodacioStudentimaSaSlikom` AS select `STUDENT`.`BrojIndeksa`, `STUDENT`.`Prezime`, `STUDENT`.`Ime`, `SMER`.`Naziv` as `NazivSmera`, `STUDENT`.`NazivFajlaFotografije`   from `Fakultet_VP_2025`.`STUDENT` INNER JOIN `Fakultet_VP_2025`.`SMER` ON `Fakultet_VP_2025`.`STUDENT`.`OznakaSmera`=`Fakultet_VP_2025`.`SMER`.`Oznaka`;
+CREATE VIEW `Fakultet_VP_2025`.`Listing` AS SELECT red.id, polazni.naziv as polazni_grad, odredisni.naziv as odredisni_grad, red.vreme, red.cena FROM `Fakultet_VP_2025`.`red_voznje` AS red INNER JOIN `gradovi` polazni ON polazni.id = red.iz INNER JOIN `gradovi` odredisni ON odredisni.id = red.ka;
 
 
 RESENJE ZA STORED PROCEDURU - unos reda voznje

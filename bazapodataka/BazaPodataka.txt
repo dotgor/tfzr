@@ -1,26 +1,6 @@
 ﻿CREATE DATABASE `Fakultet_VP_2025` CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
--- STARO pocinje --------------------------------------------------------------------------------------
-create table `Fakultet_VP_2025`.`STUDENT`
-(
-   BrojIndeksa varchar(10) NOT NULL PRIMARY KEY,
-   Prezime varchar(50) not null,
-   Ime varchar(50) not null,
-   OznakaSmera    char(2) not null,
-   NazivFajlaFotografije varchar(100) null
-);
-
-create table `Fakultet_VP_2025`.`SMER`
-(
-   Oznaka char(2) NOT NULL PRIMARY KEY,
-   Naziv  varchar(50) not null,
-   UkupanBrojStudenata int not null
-);
-
-alter table `Fakultet_VP_2025`.`STUDENT` add constraint FK_PRIPADA foreign key (OznakaSmera) references `Fakultet_VP_2025`.`SMER`(Oznaka) on delete restrict on update cascade;
--- STARO gotovo ---------------------------------------------------------------------------------------
-
 
 
 CREATE TABLE `Fakultet_VP_2025`.`gradovi` (

@@ -13,19 +13,15 @@ session_destroy();
 // koristimo klasu za poziv procedure za konekciju
 	require "klase/BaznaKonekcija.php";
 	require "klase/BaznaTabela.php";
+	require "klase/DBRedVoznjeV.php";
 	$KonekcijaObject = new Konekcija('klase/BaznaParametriKonekcije.xml');
 	$KonekcijaObject->connect();
 	$RedVoznjeObject = null;
 	if ($KonekcijaObject->konekcijaDB) // uspesno realizovana konekcija ka DBMS i bazi podataka
     {	
-		// prikaz svih redova voznje sa nazivima mesta
-		$RedVoznjeObject = new Tabela($KonekcijaObject, "red_voznje");
-		$UpitRedaVoznje = "SELECT red.id, polazni.naziv, odredisni.naziv, red.vreme, red.cena "
-			. "FROM `" . $KonekcijaObject->KompletanNazivBazePodataka . "`.`red_voznje` red "
-			. "INNER JOIN `" . $KonekcijaObject->KompletanNazivBazePodataka . "`.`gradovi` polazni ON polazni.id = red.iz "
-			. "INNER JOIN `" . $KonekcijaObject->KompletanNazivBazePodataka . "`.`gradovi` odredisni ON odredisni.id = red.ka "
-			. "ORDER BY red.iz, red.vreme";
-		$RedVoznjeObject->UcitajSvePoUpitu($UpitRedaVoznje);
+		// prikaz svih redova voznje iz pogleda Listing
+		$RedVoznjeObject = new DBRedVoznjeV($KonekcijaObject, "red_voznje");
+		$RedVoznjeObject->Listing();
 		$RedVoznjeObject->PrebaciKolekcijuUListu($RedVoznjeObject->Kolekcija);
     }
 	else
